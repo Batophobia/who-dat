@@ -34,9 +34,9 @@ app.get<{ Params: { name: string } }>(
 );
 
 app.get<{ Params: { name: string } }>(
-  "/list/:name/silhouette",
+  "/silhouette/:name",
   async (request, reply) => {
-    const name = decodeURIComponent(request.params.name);
+    const name = request.params.name;
 
     const thing = await getThing(name);
 

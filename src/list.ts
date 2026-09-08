@@ -9,7 +9,7 @@ export interface Thing {
 const listPath = path.resolve("data/list.json");
 
 function normalizeName(name: string): string {
-  return decodeURIComponent(name).replace("_", " ").toLowerCase();
+  return decodeURIComponent(name).replaceAll("_", " ").toLowerCase();
 }
 
 export async function getThing(name: string): Promise<Thing | undefined> {
@@ -25,11 +25,3 @@ export async function getThings(): Promise<Thing[]> {
   const contents = await readFile(listPath, "utf-8");
   return JSON.parse(contents) as Thing[];
 }
-
-// export async function getThing(name: string): Promise<Thing | undefined> {
-//   const things = await getThings();
-
-//   return things.find(
-//     thing => thing.name.toLowerCase() === name.toLowerCase()
-//   );
-// }
