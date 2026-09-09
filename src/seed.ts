@@ -36,6 +36,7 @@ async function seed() {
   }
 
   console.log(`Updated DB.`);
+  process.exit(0);
 }
 
 seed().catch(error => {

@@ -1,0 +1,21 @@
+services:
+  mongo:
+    image: mongo:8
+    volumes:
+      - mongo-data:/data/db
+
+  who-dat:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      MONGO_DATABASE: who-dat
+    volumes:
+      - generated:/app/generated
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
+  generated:
