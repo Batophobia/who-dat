@@ -19,6 +19,7 @@ async function downloadImage(url: string): Promise<Buffer> {
 }
 
 export async function getSilhouette(name: string, imageUrl: string): Promise<Buffer> {
+  console.log(`Silhouette for: ${name}`);
   await mkdir(generatedDirectory, { recursive: true });
 
   const outputPath = path.join(generatedDirectory, getFilename(name));

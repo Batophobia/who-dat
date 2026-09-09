@@ -34,6 +34,32 @@ app.get<{ Params: { name: string } }>(
 );
 
 app.get<{ Params: { name: string } }>(
+  "/silhouette",
+  async (request, reply) => {
+    const things = await getThings();
+
+    const thing = things[Math.floor(Math.random() * things.length)];
+
+    try {
+      const image = await getSilhouette(
+        thing.name,
+        thing.imageUrl
+      );
+
+      return reply
+        .type("image/png")
+        .send(image);
+    } catch (error) {
+      request.log.error(error);
+
+      return reply.status(502).send({
+        error: "Unable to retrieve source image"
+      });
+    }
+  }
+);
+
+app.get<{ Params: { name: string } }>(
   "/silhouette/:name",
   async (request, reply) => {
     const name = request.params.name;
