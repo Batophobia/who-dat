@@ -4,17 +4,38 @@ import { connectDatabase, getListCollection } from "./db.js";
 
 const listPath = path.resolve("data/list.json");
 
+function createSlug(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "_");
+}
+
 async function seed() {
   await connectDatabase();
 
   const contents = await readFile(listPath, "utf-8");
-  const things = JSON.parse(contents);
+  const things = JSON.parse(contents) as { name: string; imageUrl: string; }[];
 
   const collection = getListCollection();
 
-  const result = await collection.insertMany(things);
+  for (const thing of things) {
+    const slug = createSlug(thing.name);
 
-  console.log(`Inserted ${result.insertedCount} things.`);
+    await collection.updateOne(
+      { name: thing.name },
+      {
+        $set: {
+          name: thing.name,
+          slug,
+          imageUrl: thing.imageUrl
+        }
+      },
+      { upsert: true }
+    );
+  }
+
+  console.log(`Updated DB.`);
 }
 
 seed().catch(error => {
