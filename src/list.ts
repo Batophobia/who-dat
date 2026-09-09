@@ -1,12 +1,6 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { getListCollection, ListItem } from "./db.js";
 
-export interface Thing {
-  name: string;
-  imageUrl: string;
-}
-
-const listPath = path.resolve("data/list.json");
+export type Thing = ListItem;
 
 function normalizeName(name: string): string {
   return decodeURIComponent(name).replaceAll("_", " ").toLowerCase();
@@ -16,12 +10,9 @@ export async function getThing(name: string): Promise<Thing | undefined> {
   const things = await getThings();
   const normalizedName = normalizeName(name);
 
-  return things.find(
-    thing => normalizeName(thing.name) === normalizedName
-  );
+  return things.find(thing => normalizeName(thing.name) === normalizedName);
 }
 
 export async function getThings(): Promise<Thing[]> {
-  const contents = await readFile(listPath, "utf-8");
-  return JSON.parse(contents) as Thing[];
+  return getListCollection().find().toArray();
 }
