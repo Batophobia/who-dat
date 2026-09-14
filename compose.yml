@@ -3,6 +3,11 @@ services:
     image: mongo:8
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   who-dat:
     build: .
@@ -14,7 +19,8 @@ services:
     volumes:
       - generated:/app/generated
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
 
 volumes:
   mongo-data:
