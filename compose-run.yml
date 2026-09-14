@@ -5,7 +5,7 @@ services:
       - mongo-data:/data/db
 
   who-dat:
-    build: .
+    build: who-dat:latest
     ports:
       - "3000:3000"
     environment:
